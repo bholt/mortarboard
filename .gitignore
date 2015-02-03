@@ -1,0 +1,11 @@
+paper.pdf
+paper.tex
+paper.md
+paper.html
+figure/*.pdf
+figure/*.png
+
+*.log
+*.bbl
+*.out
+

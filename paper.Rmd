@@ -1,0 +1,73 @@
+---
+title: 'Claret: Using Data Types for Highly Concurrent Distributed Transactions'
+preprint: true
+
+author:
+  - {family: Holt,  given: Brandon, affiliation: 1, email: bholt}
+  - {family: Zhang, given: Irene,   affiliation: 1, email: iyzhang}
+  - {family: Ports, given: Dan,     affiliation: 1, email: dkp}
+  - {family: Oskin, given: Mark,    affiliation: 1, email: oskin}
+  - {family: Ceze,  given: Luis,    affiliation: 1, email: luisceze}
+
+organization:
+  - {id: 1, name: University of Washington}
+
+conference:
+  name: PaPoC 2015
+  location: 'April 21, 2015, Bordeaux, France'
+  year: 2015
+  
+doi: 0
+
+layout: sigplanconf
+bibliography: biblio.bib
+output:
+  pdf_document:
+    fig_caption: yes
+
+abstract: |
+  Building database applications out of data structures rather than simple string values allows the flexibility and fine-grained control of typical key-value databases while providing better performance and scalability. Composing transactions out of linearizable data structure operations exposes concurrency in a safe way, making it simple to implement efficiently and easy to reason about.
+---
+```{r setup, include=FALSE}
+opts_chunk$set(dev = 'pdf')
+```
+
+# Introduction
+Most web-scale services these days rely on NoSQL databases to provide scalable, fault-tolerant persistent storage.
+
+A recent trend in the transactional memory community is to raise the level of abstraction to data structure operations to reduce the overhead of tracking individual memory accesses as well as leverage the commutativity of operations to avoid unnecessary rollbacks. [@Herlihy:PPoPP08]
+
+# Evaluation
+To show the efficacy of leveraging commutative operations, we use an application typical of web workloads: a simplified Twitter clone known as *Retwis*.
+
+```{r throughput, fig.cap="Throughput on uniform random workload.", fig.width=3.5, fig.height=3, echo=F, message=F, warning=F, error=F}
+data <- function(d) {
+  d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
+  d$throughput <- d$txn_count * num(d$nclients) / d$total_time
+  # d$throughput <- d$ntxns * num(d$nclients) / d$total_time
+  d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
+  return(d)
+}
+
+d <- data(db("
+  select * from tapir where 
+  generator_time is not null and total_time is not null
+  and (initusers = 50 or initusers = 500)
+  and name like 'claret-v%'
+",
+  factors=c('nshards', 'nclients'),
+  numeric=c('total_time', 'txn_count')
+))
+
+ggplot(d, aes(
+  x = nclients,
+  y = throughput,
+  group = ccmode,
+  fill = ccmode,
+  color = ccmode
+))+
+# geom_meanbar()+
+stat_smooth()+
+facet_grid(~nshards, labeller=label_pretty)+
+theme_mine
+```
