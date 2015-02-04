@@ -20,7 +20,7 @@ all: pdf web
 web: $(PAPER).html
 pdf: $(PAPER).pdf
 
-$(PAPER).md: $(PAPER).Rmd Makefile
+$(PAPER).md: $(PAPER).Rmd common.R Makefile
 	Rscript --slave -e "library(knitr); source('common.R'); knit('"$<"')"
 
 $(PAPER).tex: $(PAPER).md template.tex Makefile

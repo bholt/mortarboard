@@ -37,6 +37,16 @@ Most web-scale services these days rely on NoSQL databases to provide scalable, 
 
 A recent trend in the transactional memory community is to raise the level of abstraction to data structure operations to reduce the overhead of tracking individual memory accesses as well as leverage the commutativity of operations to avoid unnecessary rollbacks. [@Herlihy:PPoPP08]
 
+# Commutativity
+
+| Operation | Specification |
+|:--------------|:------------------|
+|`insert(v)` | commutes with `insert`|
+|`range(start,end)` | commutes with same & `cardinality`|
+| `cardinality()` | commuates with same & `range` |
+
+Table: Commutativity Specification for Set.
+
 # Evaluation
 To show the efficacy of leveraging commutative operations, we use an application typical of web workloads: a simplified Twitter clone known as *Retwis*.
 
