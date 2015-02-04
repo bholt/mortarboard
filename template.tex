@@ -89,9 +89,24 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
-\setcounter{secnumdepth}{0}
+% \setcounter{secnumdepth}{0}
  
 % \EndDefineVerbatimEnvironment{Highlighting}
+
+
+\usepackage{listings}
+\usepackage{float}
+
+\floatstyle{plain}
+\newfloat{listing}{t}{lop}
+\floatname{listing}{Listing}
+\def\listingautorefname{Listing}
+
+\def\Snospace~{\S{}}
+\renewcommand*\sectionautorefname{\Snospace}
+\renewcommand*\subsectionautorefname{\Snospace}
+\renewcommand*\subsubsectionautorefname{\Snospace}
+
 
 \begin{document}
 \special{papersize=8.5in,11in}

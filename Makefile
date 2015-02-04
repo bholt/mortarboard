@@ -16,9 +16,12 @@ PAPER += paper
 
 .PHONY: all
 	
-all: pdf web
+all: pdf web view
 web: $(PAPER).html
 pdf: $(PAPER).pdf
+
+view: $(PAPER).pdf
+	open -a Skim $(PAPER).pdf
 
 $(PAPER).md: $(PAPER).Rmd common.R Makefile
 	Rscript --slave -e "library(knitr); source('common.R'); knit('"$<"')"
