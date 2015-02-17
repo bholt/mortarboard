@@ -29,7 +29,7 @@ abstract: |
   Building database applications out of data structures rather than simple string values allows the flexibility and fine-grained control of typical key-value databases while providing better performance and scalability. Composing transactions out of linearizable data structure operations exposes concurrency in a safe way, making it simple to implement efficiently and easy to reason about.
 ---
 ```{r setup, include=FALSE}
-opts_chunk$set(dev = 'pdf')
+opts_chunk$set(dev='pdf', echo=F, message=F, warning=F, error=F, fig.width=3.6, fig.height=3)
 ```
 
 # Introduction
@@ -41,13 +41,25 @@ In \autoref{eval} we consider a case study modeled after Twitter.
 
 # Commutativity
 
-| Operation | Specification |
-|:--------------|:------------------|
-|`insert(v)` | commutes with `insert`|
-|`range(start,end)` | commutes with same & `cardinality`|
-| `cardinality()` | commuates with same & `range` |
+Though *commutativity* is often discussed in terms of an operation commuting with all other operations, it is actually more nuanced. If a pair of operations commute, then executing them in either order will produce the same result. Using the definitions from \cite{Kulkarni:PLDI11}, whether or not a pair of method invocations commute is a property of the data type and is a function of the methods, their arguments, their return values, and the *abstract* state of their target. We call the full set of commutativity rules for a data type its *commutativity specification.* An example specification for a *set* is shown in \autoref{spec}.
 
-Table: Commutativity Specification for Set.
+\begin{table}
+\centering
+\begin{tabular}{lll}
+\textbf{method:} & \textbf{commutes with:} & \textbf{when:} \\
+\hline
+\texttt{add(x) -> void} & \texttt{add(y)} & $\forall x, y$ \\
+\texttt{remove(x) -> void} & \texttt{remove(y)} & $\forall x, y$ \\
+    & \texttt{add(y)} & $x \ne y$ \\
+\texttt{size() -> int} & \texttt{add(x)} & $x \in Set$ \\
+    & \texttt{remove(x)} & $x \notin Set$ \\
+\texttt{getall() -> list} & \texttt{add(x)} & $x \in Set$ \\
+    & \texttt{remove(x)} & $x \notin Set$ \\
+    & \texttt{size()} & $always$ \\
+    \hline
+\end{tabular}
+\caption{\label{spec} Commutativity Specification for Set.}
+\end{table}
 
 # Evaluation {#eval}
 To show the efficacy of leveraging commutative operations, we use an application typical of web workloads: a simplified Twitter clone known as *Retwis*. In \autoref{tput} you can see that with commutativity, transaction throughput scales with increased concurrency.

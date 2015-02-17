@@ -13,3 +13,8 @@ Proposed syntax:
     As you can see in [#throughput].
 
 Look into implementing this as a [Pandoc filter](http://johnmacfarlane.net/pandoc/scripting.html).
+
+
+## Scholarly Markdown
+http://scholarlymarkdown.com/Scholarly-Markdown-Guide.html
+http://scholdoc.scholarlymarkdown.com/
