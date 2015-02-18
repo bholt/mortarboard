@@ -1,7 +1,7 @@
 
 PDFLATEX	?= pdflatex -halt-on-error -file-line-error
 BIBTEX		?= bibtex
-PANDOC    ?= pandoc --natbib -S --standalone
+PANDOC    ?= scholdoc --natbib -S --standalone --data-dir=.
 
 ifneq ($(QUIET),)
 PDFLATEX	+= -interaction=batchmode
@@ -26,13 +26,13 @@ view: $(PAPER).pdf
 $(PAPER).md: $(PAPER).Rmd common.R Makefile
 	Rscript --slave -e "library(knitr); source('common.R'); knit('"$<"')"
 
-$(PAPER).tex: $(PAPER).md template.tex Makefile
-	$(PANDOC) --template=template.tex -o $@ $<
+$(PAPER).tex: $(PAPER).md templates/sigplanconf.latex Makefile
+	$(PANDOC) --filter=filters/autoref.py --template=templates/sigplanconf.latex -o $@ $<
 
 $(PAPER).html: $(PAPER).md template.html Makefile
 	# $(PANDOC) --template=template.tex -o $@ $<
 	# Rscript --slave -e "library(knitr); pandoc('"$<"')"
-	$(PANDOC) --template=template.html -o $@ $<
+	$(PANDOC) -o $@ $<
 
 %.pdf: %.tex
 	$(PDFLATEX) $^

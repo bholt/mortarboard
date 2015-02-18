@@ -15,6 +15,21 @@ Proposed syntax:
 Look into implementing this as a [Pandoc filter](http://johnmacfarlane.net/pandoc/scripting.html).
 
 
+### Configuration
+
+Tried using ghc, but couldn't install all the necessary modules.
+
+    > brew install ghc cabal-install
+    > cabal update
+    > cabal install pandoc
+    ..build error..
+
+Python works though:
+
+    pip install pandocfilters
+
+
+
 ## Scholarly Markdown
 http://scholarlymarkdown.com/Scholarly-Markdown-Guide.html
 http://scholdoc.scholarlymarkdown.com/
