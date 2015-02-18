@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mortarboard Sigplanconf 2-column template
+\documentclass[$if(sigplanconf)$$sigplanconf$$else$10pt$endif$]{sigplanconf}
+
+% use Inconsolata (90%) as fixed-width font
+\usepackage[scaled=0.9]{inconsolata}
+
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+
+\usepackage{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$abbrv$endif$}
+
+\usepackage{listings}
+
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+\VerbatimFootnotes
+$endif$
+\usepackage{graphicx}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$blue$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(strikeout)$
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+\setcounter{secnumdepth}{5}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define available floats
+\usepackage{float}
+
+\newfloat{figure}{t}{lop}
+\floatname{figure}{Figure}
+\def\figureautorefname{Figure}
+
+\floatstyle{plain}
+\newfloat{listing}{t}{lop}
+\floatname{listing}{Listing}
+\def\listingautorefname{Listing}
+
+\newfloat{table}{t}{lop}
+\floatname{table}{Table}
+\def\tableautorefname{Table}
+
+% small, bold, compact figure captions
+\usepackage[font=small,labelfont=bf,skip=0pt]{caption}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% use '§' for sections
+\def\Snospace~{\S{}}
+\renewcommand*\sectionautorefname{\Snospace}
+\renewcommand*\subsectionautorefname{\Snospace}
+\renewcommand*\subsubsectionautorefname{\Snospace}
+
+
+% less space between floats/caption, and text
+\setlength{\textfloatsep}{15pt}
+\setlength{\floatsep}{5pt}
+\setlength{\intextsep}{15pt}
+
+
+\conferenceinfo{$conference.year$}{$conference.location$} 
+\copyrightyear{$conference.year$}
+$if(doi)$\doi{$doi$}$endif$
+
+\begin{document}
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+  
+$if(title)$
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+$endif$
+
+\authorinfo{
+  $for(author)$$author.name$$sep$\and $endfor$
+}{
+$for(organization)$
+$organization.name$
+$endfor$
+}{
+$if(emails)$
+  $emails$
+$else$
+  $if(email-common)$
+    \{$for(author)$$author.email$$sep$,$endfor$\}@$email-common$
+  $else$
+    $for(author)$$author.email$$sep$,$endfor$
+  $endif$
+$endif$
+}
+\maketitle
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$body$
+
+\bibliography{$bibliography$}
+
+\end{document}
