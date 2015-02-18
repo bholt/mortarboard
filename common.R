@@ -11,6 +11,8 @@ db <- function(query, factors=c(), numeric=c()) {
   return(d)
 }
 
+capply <- function(col, func) unlist(lapply(col, func))
+
 num <- function(var) as.numeric(as.character(var))
 
 save <- function(g, name=FILE_BASE, file=sprintf("%s/%s.pdf",FILE_DIR,name), w=3.3, h=3.1) {
