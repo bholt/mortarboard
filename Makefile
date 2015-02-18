@@ -23,16 +23,14 @@ pdf: $(PAPER).pdf
 view: $(PAPER).pdf
 	open -a Skim $(PAPER).pdf
 
-$(PAPER).md: $(PAPER).Rmd common.R Makefile
+%.md: %.Rmd common.R Makefile
 	Rscript --slave -e "library(knitr); source('common.R'); knit('"$<"')"
 
-$(PAPER).tex: $(PAPER).md templates/sigplanconf.latex Makefile
+%.tex: %.md templates/sigplanconf.latex Makefile
 	$(PANDOC) --filter=filters/autoref.py --template=templates/sigplanconf.latex -o $@ $<
 
-$(PAPER).html: $(PAPER).md template.html Makefile
-	# $(PANDOC) --template=template.tex -o $@ $<
-	# Rscript --slave -e "library(knitr); pandoc('"$<"')"
-	$(PANDOC) -o $@ $<
+%.html: %.md templates/bootstrap.html Makefile
+	$(PANDOC) --template=templates/bootstrap.html -o $@ $<
 
 %.pdf: %.tex
 	$(PDFLATEX) $^

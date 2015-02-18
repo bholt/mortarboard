@@ -1,0 +1,78 @@
+---
+title: Simulating an interactive Twitter graph
+---
+```{r, include=F}
+opts_chunk$set(echo=F, message=F, warning=F, error=F)
+source('project.R')
+library(plotly)
+py <- plotly()
+```
+
+This week I submitted some early work to a workshop co-located with EuroSys in Bordeaux, France. In the process of gathering data for my submission, I discovered some interesting things about simulating social network graphs that I thought I'd share more broadly.
+
+## Followers following power law
+Everyone knows the degree distribution of natural graphs follows a power law: most people have a handful of friends or followers (in my case, on the order of 0), while a handful of people (Katy Perry, Justin Bieber, Barack Obama) have many millions of followers. We know how to at least reproduce graphs with this same degree distribution with a class of synthetic graph generators known as Kronecker generators.
+
+```{r, include=F}
+# library(jsonlite)
+# df.histogram <- function(json, version="none") {
+#   d <- fromJSON(json)
+#   return(data.frame(x=num(names(d)), y=num(unlist(d)), version=version))
+# }
+# df <- subset(db("
+#     select * from tapir where stat_following_counts is not null
+#     and name like '%v0.14%'
+# "),
+#   nclients == 32
+#   & initusers == 4096
+# )
+# df$grp <- with(df, sprintf("%s\n%s\nmix:%s/%s,\n%s", name, ccmode, mix, alpha, gen))
+# 
+# histogram.facets <- function(df, measure, grp) {
+#   d <- data.frame(x=c(),y=c(),version=c())
+#   for (i in 1:nrow(df)) {
+#     d <- rbind(d, df.histogram(df[i,measure], df[i,grp]))
+#   }
+#   return(d)
+# }
+```
+
+```{r followers, include=F}
+# d.follow <- histogram.facets(subset(df,
+#     initusers == 4096 & mix == 'geom_repost'
+# ), 'stat_follower_counts', 'grp')
+# ggplot(d.follow, aes(x=x, weight=y))+
+#     stat_ecdf(color=c.blue)+
+#     xlab('# followers / user (log scale)')+ylab('CDF (log scale)')+
+#     scale_x_log10(breaks=c(1,10,100,1000))+scale_y_log10(breaks=c(0.1,0.5,1.0))+
+#     theme_mine
+# py$ggplotly()
+```
+
+```{r throughput, plotly=TRUE}
+d <- data(db("
+    select * from tapir where 
+    generator_time is not null and total_time is not null
+    and name like 'claret-v0.14%'
+  ",
+    factors=c('nshards', 'nclients'),
+    numeric=c('total_time', 'txn_count')
+))
+
+d.u <- subset(d, nshards == 4 & initusers == 4096 
+                & grepl('geom_repost|read_heavy', mix))
+                
+                
+
+g <- ggplot(d.u, aes(x=nclients, y=throughput/1000, group=cc, fill=cc, color=cc, linetype=cc))+
+    stat_summary(fun.y=mean, geom="line")+
+    xlab('Concurrent clients')+ylab('Throughput (k trans. / sec)')+
+    # expand_limits(y=0)
+    scale_y_continuous(limits=c(0, 25))+
+    facet_wrap(~workload)+
+    theme_mine+
+    cc_scales(title='Concurrency\ncontrol:')
+
+py$ggplotly(g, session="knitr")
+```
+

@@ -38,8 +38,15 @@ geom_meanbar <- function(labeller=label_pretty) {
   ))
 }
 
+c.blue   <- "#0072B2"
+c.yellow <- "#E69F00"
+c.green  <- "#009E73"
+c.red    <- "#D55E00"
+c.pink   <- "#CC79A7"
+c.gray   <- "#999999"
+
 # The palette with grey:
-cbPalette <- c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999")
+cbPalette <- c(c.blue, c.yellow, c.green, c.red, c.pink, "#56B4E9", "#F0E442", c.gray)
 
 theme_mine <- list(
   # To use for fills, add
